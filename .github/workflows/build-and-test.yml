@@ -1,9 +1,6 @@
 name: Continuous Integration
 on:
   push:
-  pull_request:
-  schedule:
-    - cron: '42 15 * * *'
 jobs:
   build:
     name: HHVM ${{matrix.hhvm}} - ${{matrix.os}}
@@ -14,11 +11,6 @@ jobs:
         os: [ macos ]
         hhvm:
           - 'nightly'
-        exclude:
-          # 4.67 package is no longer usable on macos
-          - os: macos
-            hhvm: '4.67'
-
     runs-on: ${{matrix.os}}-latest
     steps:
       - uses: actions/checkout@v2
@@ -33,6 +25,6 @@ jobs:
           fi
       - name: Inspect HHVM and Hack versions
         run: |
-          otool -L $(which hhvm)
+          otool -L $(brew --prefix hhvm-nightly)/bin/hhvm
           hhvm --version
           hh_client --version
