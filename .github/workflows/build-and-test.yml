@@ -21,7 +21,7 @@ jobs:
           if [ "${{matrix.hhvm}}" = "latest" ]; then
             brew install hhvm
           else
-            brew install hhvm-${{matrix.hhvm}}
+            HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true brew install hhvm-${{matrix.hhvm}}
           fi
       - name: Inspect HHVM and Hack versions
         run: |
