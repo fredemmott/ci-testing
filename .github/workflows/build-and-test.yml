@@ -25,6 +25,9 @@ jobs:
           fi
       - name: Inspect HHVM and Hack versions
         run: |
-          otool -L $(brew --prefix hhvm-nightly)/bin/hhvm
+          ls -l /usr/local/Cellar/hhvm-nightly
+          ls -l /usr/local/Cellar/hhvm-nightly/2022.03.09
+          ls -l /usr/local/Cellar/hhvm-nightly/2022.03.09/bin
+          otool -L /usr/local/Cellar/hhvm-nightly/2022.03.09/bin/hhvm
           hhvm --version
           hh_client --version
