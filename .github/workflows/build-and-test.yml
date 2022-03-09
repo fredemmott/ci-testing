@@ -1,0 +1,38 @@
+name: Continuous Integration
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '42 15 * * *'
+jobs:
+  build:
+    name: HHVM ${{matrix.hhvm}} - ${{matrix.os}}
+    strategy:
+      # Run tests on all OS's and HHVM versions, even if one fails
+      fail-fast: false
+      matrix:
+        os: [ macos ]
+        hhvm:
+          - 'nightly'
+        exclude:
+          # 4.67 package is no longer usable on macos
+          - os: macos
+            hhvm: '4.67'
+
+    runs-on: ${{matrix.os}}-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install HHVM (brew)
+        if: matrix.os == 'macos'
+        run: |
+          brew tap hhvm/hhvm
+          if [ "${{matrix.hhvm}}" = "latest" ]; then
+            brew install hhvm
+          else
+            brew install hhvm-${{matrix.hhvm}}
+          fi
+      - name: Inspect HHVM and Hack versions
+        run: |
+          otool -L $(which hhvm)
+          hhvm --version
+          hh_client --version
